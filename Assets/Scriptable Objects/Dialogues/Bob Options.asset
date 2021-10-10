@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67653e1095f6bc645b5543d30b7a06a6, type: 3}
+  m_Name: Bob Options
+  m_EditorClassIdentifier: 
+  dialogue:
+  - characterName: Bob
+    text: There are lots of monsters around me
+  - characterName: Bob
+    text: I don't feel very safe
+  - characterName: Bob
+    text: Could you please take them out for me?
+  options:
+  - nextDialogue: {fileID: 11400000, guid: 2052e495dcf83294191b16c5eb98a748, type: 2}
+    giveQuest: {fileID: 0}
+    optionName: What do I get in return
+  - nextDialogue: {fileID: 11400000, guid: 397764bfc1d6c1540b792d3a7bc0dab9, type: 2}
+    giveQuest: {fileID: 11400000, guid: c6f80158ce96efd4092b72f193dd01fe, type: 2}
+    optionName: Yeah, sure
+  - nextDialogue: {fileID: 0}
+    giveQuest: {fileID: 0}
+    optionName: Nope

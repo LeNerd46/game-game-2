@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67653e1095f6bc645b5543d30b7a06a6, type: 3}
+  m_Name: What do I get in return 1
+  m_EditorClassIdentifier: 
+  dialogue:
+  - characterName: Bob
+    text: I can give you money, lots of money
+  - characterName: Bob
+    text: Please just help me
+  options:
+  - nextDialogue: {fileID: 11400000}
+    giveQuest: {fileID: 0}
+    optionName: What do I get in return
+  - nextDialogue: {fileID: 11400000, guid: 397764bfc1d6c1540b792d3a7bc0dab9, type: 2}
+    giveQuest: {fileID: 11400000, guid: b88fa9f724668984da006d11d8f04971, type: 2}
+    optionName: Yeah, sure
+  - nextDialogue: {fileID: 0}
+    giveQuest: {fileID: 0}
+    optionName: Nope

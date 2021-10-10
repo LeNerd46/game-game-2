@@ -1,0 +1,176 @@
+using UnityEngine;
+using TMPro;
+using System.Collections.Generic;
+
+public class DialogueManager : MonoBehaviour
+{
+    public static DialogueManager instance;
+
+    public GameObject dialogueUI;
+    public GameObject dialogueOptionUI;
+    public UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController player;
+    public GameObject weaponPlayer;
+    public TextMeshProUGUI dialogueName;
+    public TextMeshProUGUI dialogueText;
+    public GameObject[] optionTexts;
+
+    private Queue<DialogueBase.Info> info = new Queue<DialogueBase.Info>();
+
+    private bool isOption;
+    public bool inDialogue;
+
+    public int amountOfOptions;
+    public int currentResponse;
+
+    public void Awake()
+    {
+        if (instance == null)
+            instance = this;
+    }
+
+    public void EnqueueDialogue(DialogueBase dialogue)
+    {
+        weaponPlayer.GetComponentInChildren<WeaponSwitching>().gameObject.transform.GetChild(WeaponSwitching.selectedWeapon).gameObject.SetActive(false);
+        weaponPlayer.GetComponentInChildren<WeaponSwitching>().enabled = false;
+
+        /*if (inDialogue)
+            return;
+        else*/
+            inDialogue = true;
+
+        info.Clear();
+
+        dialogueUI.SetActive(true);
+        player.enabled = false;
+
+        if (dialogue is DialogueOptions)
+        {
+            isOption = true;
+            DialogueOptions dialogueOptions = dialogue as DialogueOptions;
+            amountOfOptions = dialogueOptions.options.Length;
+
+            for (int i = 0; i < amountOfOptions; i++)
+            {
+                optionTexts[i].SetActive(false);
+            }
+
+            for (int i = 0; i < amountOfOptions; i++)
+            {
+                optionTexts[i].SetActive(true);
+                optionTexts[i].GetComponent<TextMeshProUGUI>().text = dialogueOptions.options[i].optionName;
+
+                UnityEventHandler eventHandler = optionTexts[i].GetComponent<UnityEventHandler>();
+                eventHandler.eventHandler = dialogueOptions.options[i].unityEvent;
+                
+                if (dialogueOptions.options[i].nextDialogue != null)
+                    eventHandler.dialogue = dialogueOptions.options[i].nextDialogue;
+                else
+                    eventHandler.dialogue = null;
+            }
+        }
+        else
+            isOption = false;
+
+        foreach (var information in dialogue.dialogue)
+        {
+            info.Enqueue(information);
+        }
+
+        DequeueDialogue();
+    }
+
+    public void DequeueDialogue()
+    {
+        if (info.Count == 0)
+        {
+            EndDialogue();
+            return;
+        }
+
+        if (!isOption)
+        {
+            foreach (var text in optionTexts)
+            {
+                text.GetComponent<TextMeshProUGUI>().enabled = false;
+            }
+        }
+
+        DialogueBase.Info information = info.Dequeue();
+
+        dialogueName.text = information.characterName;
+        dialogueText.text = information.text;
+    }
+
+    public void EndDialogue()
+    {
+        if (isOption)
+        {
+            foreach (var text in optionTexts)
+            {
+                text.GetComponent<TextMeshProUGUI>().enabled = false;
+            }
+        }
+        else
+        {
+            player.enabled = true;
+            dialogueUI.SetActive(false);
+
+            foreach (var text in optionTexts)
+            {
+                text.GetComponent<TextMeshProUGUI>().enabled = false;
+            }
+
+            inDialogue = false;
+        }
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            dialogueUI.SetActive(false);
+            player.enabled = true;
+            inDialogue = false;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+            DequeueDialogue();
+
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            currentResponse++;
+
+            if (currentResponse >= amountOfOptions - 1)
+                currentResponse = amountOfOptions - 1;
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            currentResponse--;
+
+            if (currentResponse < 0)
+                currentResponse = 0;
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            currentResponse--;
+
+            if (currentResponse < 0)
+                currentResponse = 0;
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            currentResponse++;
+
+            if (currentResponse >= amountOfOptions - 1)
+                currentResponse = amountOfOptions - 1;
+        }
+
+        for (int i = 0; i < amountOfOptions; i++)
+        {
+            if (i == currentResponse)
+                optionTexts[i].GetComponent<TextMeshProUGUI>().color = Color.grey;
+            else
+                optionTexts[i].GetComponent<TextMeshProUGUI>().color = Color.white;
+        }
+    }
+}

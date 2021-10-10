@@ -1,0 +1,56 @@
+using UnityEngine;
+
+public class PauseMenu : MonoBehaviour
+{
+    public GameObject pauseMenu;
+    public GameObject UI;
+    public GameObject settings;
+
+    private bool paused;
+    private bool settingsOpen;
+
+    void Update()
+    {
+        if (InputManager.instance.GetKeyDown(Actions.Pause))
+            paused = !paused;
+
+        if (paused && !settingsOpen)
+            Pause();
+        else if(paused && !settingsOpen)
+            Resume();
+    }
+
+    public void Pause()
+    {
+        settingsOpen = false;
+        Time.timeScale = 0f;
+        pauseMenu.SetActive(true);
+        UI.SetActive(false);
+        settings.SetActive(false);
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void Resume()
+    {
+        settingsOpen = false;
+        Time.timeScale = 1f;
+        pauseMenu.SetActive(false);
+        UI.SetActive(true);
+        settings.SetActive(false);
+
+        if (!Inventory.MenuOpen)
+            Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void OpenSettings()
+    {
+        settingsOpen = true;
+        pauseMenu.SetActive(false);
+        settings.SetActive(true);
+    }
+
+    public void Quit()
+    {
+        GameManager.instance.LoadScene(2, 1);
+    }
+}

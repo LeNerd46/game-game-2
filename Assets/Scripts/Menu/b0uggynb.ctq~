@@ -1,0 +1,71 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
+using UnityEngine.UI;
+using TMPro;
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager instance;
+    public GameObject loadingScreen;
+
+    public Slider progressBar;
+    public float totalProgress;
+
+    public delegate void OnEnemyDeathCallback(EnemyProfile enemyProfile);
+    public OnEnemyDeathCallback onEnemyDeathCallback;
+
+    public delegate void OnItemPickUp(Item pickedUpItem);
+    public OnItemPickUp onItemPickup;
+
+    List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
+
+    public TextMeshProUGUI objectiveTextObject;
+    public Animator animator;
+
+    void Awake()
+    {
+        instance = this;
+
+        // SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+    }
+
+    public void LoadScene(int unloadSceneIndex, int loadSceneIndex)
+    {
+        loadingScreen.SetActive(true);
+
+        scenesLoading.Add(SceneManager.UnloadSceneAsync(1));
+        scenesLoading.Add(SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive));
+
+        StartCoroutine(GetSceneLoadProgress());
+    }
+
+    public void UpdateTracker(string objectiveText)
+    {
+        objectiveTextObject.text = objectiveText;
+        animator.Play("QuestProgressTextFadeIn");
+    }
+
+    public IEnumerator GetSceneLoadProgress()
+    {
+        for (int i = 0; i < scenesLoading.Count; i++)
+        {
+            while (!scenesLoading[i].isDone)
+            {
+                foreach (AsyncOperation operation in scenesLoading)
+                {
+                    totalProgress += operation.progress;
+                }
+
+                totalProgress = (totalProgress / scenesLoading.Count) * 100f;
+
+                progressBar.value = Mathf.RoundToInt(totalProgress);
+
+                yield return null;
+            }
+        }
+
+        loadingScreen.SetActive(false);
+    }
+}

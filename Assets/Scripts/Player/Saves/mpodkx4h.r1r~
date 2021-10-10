@@ -1,0 +1,23 @@
+using System.Runtime.Serialization;
+using UnityEngine;
+
+public class PlayerHealthSurrogate : ISerializationSurrogate
+{
+    public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
+    {
+        PlayerHealth health = (PlayerHealth)obj;
+        info.AddValue("health", health.health);
+        info.AddValue("maxHealth", health.maxHealth);
+        info.AddValue("position", health.gameObject.transform.position);
+        info.AddValue("rotation", health.gameObject.transform.rotation);
+    }
+
+    public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
+    {
+        PlayerHealth health = (PlayerHealth)obj;
+        health.health = (int)info.GetValue("health", typeof(int));
+        health.maxHealth = (int)info.GetValue("maxHealth", typeof(int));
+        obj = health;
+        return obj;
+    }
+}

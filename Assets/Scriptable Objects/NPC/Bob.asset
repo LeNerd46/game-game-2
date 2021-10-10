@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc3d3c1a559ec54d865df61b0ad3a81, type: 3}
+  m_Name: Bob
+  m_EditorClassIdentifier: 
+  npcName: Bob
+  dialogue:
+  - Hey, do you think you could help me out with something
+  - There's a ton of enemies around me, do you think you could take them out?
+  - Darn, hopefully you'll change your mind
+  playerDialogue:
+  - Of course
+  - Maybe later
+  - No, I'm good
+  interactEvent: 3
